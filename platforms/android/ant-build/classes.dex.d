@@ -1,0 +1,20 @@
+C:\Users\Sunny\Documents\ticketskipper\platforms\android\ant-build\classes.dex : \
+C:\Users\Sunny\Documents\ticketskipper\platforms\android\ant-build\classes\com\phonegap\helloworld\BuildConfig.class \
+C:\Users\Sunny\Documents\ticketskipper\platforms\android\ant-build\classes\com\phonegap\helloworld\HelloWorld.class \
+C:\Users\Sunny\Documents\ticketskipper\platforms\android\ant-build\classes\com\phonegap\helloworld\R$attr.class \
+C:\Users\Sunny\Documents\ticketskipper\platforms\android\ant-build\classes\com\phonegap\helloworld\R$drawable.class \
+C:\Users\Sunny\Documents\ticketskipper\platforms\android\ant-build\classes\com\phonegap\helloworld\R$string.class \
+C:\Users\Sunny\Documents\ticketskipper\platforms\android\ant-build\classes\com\phonegap\helloworld\R$xml.class \
+C:\Users\Sunny\Documents\ticketskipper\platforms\android\ant-build\classes\com\phonegap\helloworld\R.class \
+C:\Users\Sunny\Documents\ticketskipper\platforms\android\ant-build\classes\de\appplant\cordova\plugin\localnotification\LocalNotification$1.class \
+C:\Users\Sunny\Documents\ticketskipper\platforms\android\ant-build\classes\de\appplant\cordova\plugin\localnotification\LocalNotification$2.class \
+C:\Users\Sunny\Documents\ticketskipper\platforms\android\ant-build\classes\de\appplant\cordova\plugin\localnotification\LocalNotification$3.class \
+C:\Users\Sunny\Documents\ticketskipper\platforms\android\ant-build\classes\de\appplant\cordova\plugin\localnotification\LocalNotification$4.class \
+C:\Users\Sunny\Documents\ticketskipper\platforms\android\ant-build\classes\de\appplant\cordova\plugin\localnotification\LocalNotification$5.class \
+C:\Users\Sunny\Documents\ticketskipper\platforms\android\ant-build\classes\de\appplant\cordova\plugin\localnotification\LocalNotification.class \
+C:\Users\Sunny\Documents\ticketskipper\platforms\android\ant-build\classes\de\appplant\cordova\plugin\localnotification\Options.class \
+C:\Users\Sunny\Documents\ticketskipper\platforms\android\ant-build\classes\de\appplant\cordova\plugin\localnotification\Receiver.class \
+C:\Users\Sunny\Documents\ticketskipper\platforms\android\ant-build\classes\de\appplant\cordova\plugin\localnotification\ReceiverActivity.class \
+C:\Users\Sunny\Documents\ticketskipper\platforms\android\ant-build\classes\de\appplant\cordova\plugin\localnotification\Restore.class \
+C:\Users\Sunny\Documents\ticketskipper\platforms\android\ant-build\classes\org\apache\cordova\device\Device.class \
+C:\Users\Sunny\Documents\ticketskipper\platforms\android\ant-build\dexedLibs\classes-11ac00a3362af9c02e05ca68811187a3.jar \

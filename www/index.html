@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<!--
+    Copyright (c) 2012-2014 Adobe Systems Incorporated. All rights reserved.
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="msapplication-tap-highlight" content="no" />
+        <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+        <link rel="stylesheet" type="text/css" href="css/index.css" />
+        <title>Ticket Skipper</title>
+    </head>
+    <body>
+        
+        <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="js/index.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+        <script type="text/javascript" charset="utf-8" src="cordova.localNotification.js"></script>
+        <script type="text/javascript" charset="utf-8" src="cordova.background-mode.js"></script>
+
+
+<p class="event received" onclick="window.plugin.notification.local.add({ message: 'Great app!' });">Show Notification</p>
+
+<p class="event received" onclick="window.plugin.notification.local.add({ sound: 'TYPE_ALARM' });">Ring Default Ringtone</p>
+        
+        <h1>Ticket Skipper</h1>
+        Shows notifications if you need to move your car </br></br>
+        
+        <div id="back_run_test"></div>
+        <div id="back_run_test2"></div>
+        <div id="back_run_test3"></div>
+
+        <div id="user_notification"></div>
+        <div id="show_temperature"></div>
+
+
+    
+
+
+        <script type="text/javascript">
+        jQuery(document).ready(function($) {
+            $.ajax({
+                url : "http://api.wunderground.com/api/ed55ecb317977ec5/hourly/q/IL/Evanston.json",
+                dataType : "jsonp",
+                success : function(parsed_json) {
+                    var count = 0;
+                    $.each( parsed_json['hourly_forecast'], function( index, value ) {
+                        var snow = value['snow']['english'];
+                        if(index<8) {
+                            if (index==0) {
+                                $('#show_temperature').append("snow right now:  "  + snow + " inches"+ '<br/>');
+                                if (snow<2)
+                                     $('#user_notification').prepend("<p id='note'>You don't need to move your car right now </p><br/>");
+                                else if (snow >= 2)
+                                     $('#user_notification').prepend("<p id='note'>Move your car RIGHT NOW!!! </p><br/>");
+                            }
+                            else
+                                $('#show_temperature').append("snow after " + index +" hour:  " + snow +  " inches"+ '<br/>');
+                        }                
+                    });
+                }
+            });
+        });
+
+        document.addEventListener('deviceready', function () {
+            window.plugin.notification.local.add({ message: 'Great app!' });
+        }, false);     
+
+
+        $( function() {
+            app.initialize();
+            
+            window.plugin.backgroundMode.disable();
+            window.plugin.backgroundMode.enable();
+            back_run();
+        });
+
+        function back_run() {
+            var dt = new Date();
+            var myTime = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+            var mySec = dt.getSeconds();
+            $('#back_run_test').text('in back_run:' + myTime);
+            if ( mySec == "10" ) {
+                //$('#back_run_test2').text('Is BACKRUN! @' + myTime);
+                //window.plugin.notification.local.add({ message: 'Is BACKRUN!' });
+                fetchData();
+            }
+            setTimeout('back_run()',1000);
+        }
+
+        function fetchData() {
+            var data;
+
+            var out_head = 'Snow in 3hrs (in.): ';
+            var out_strings = [];
+            
+            app.retrieveData( function(data){
+                $.each(data, function( index, value ){
+                    //$("#back_run_test2").append(value['snow_depth']);
+                    out_strings.push( ' ' + value['snow_depth'] + ' ');
+                    //console.log( index +': ' +out_strings);
+                });
+                
+                out_strings.join(' , ');
+                window.plugin.notification.local.add({ message: out_head + out_strings });
+                //$('#back_run_test3').text(out_head + out_strings);
+            });
+        }
+
+        </script>
+        
+    </body>
+</html>
