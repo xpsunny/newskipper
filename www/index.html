@@ -81,16 +81,27 @@
             });
         });
 
-        document.addEventListener('deviceready', function () {
-            window.plugin.notification.local.add({ message: 'Great app!' });
-        }, false);     
+
+        function onDeviceReady(){
+            document.addEventListener('pause', onPause, false);
+            document.addEventListener('resume', onResume, false);
+
+            window.plugin.notification.local.add({ sound: 'TYPE_ALARM' });
+
+            window.plugin.backgroundMode.disable();
+        }
+        function onResume(){
+            window.plugin.backgroundMode.disable();
+        }
+        function onPause(){
+            window.plugin.backgroundMode.enable();
+        }
+        document.addEventListener('deviceready', onDeviceReady, false);
 
 
         $( function() {
             app.initialize();
-            
-            window.plugin.backgroundMode.disable();
-            window.plugin.backgroundMode.enable();
+
             back_run();
         });
 
@@ -121,7 +132,7 @@
                 });
                 
                 out_strings.join(' , ');
-                window.plugin.notification.local.add({ message: out_head + out_strings });
+                window.plugin.notification.local.add({ message: out_head + out_strings, sound: 'TYPE_ALARM' });
                 //$('#back_run_test3').text(out_head + out_strings);
             });
         }
