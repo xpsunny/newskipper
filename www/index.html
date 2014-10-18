@@ -43,7 +43,7 @@
 <p class="event received" onclick="window.plugin.notification.local.add({ sound: 'TYPE_ALARM' });">Ring Default Ringtone</p>
         
         <h1>Ticket Skipper</h1>
-        Shows notifications if you need to move your car </br></br>
+        Shows notifications if you need to move your car </br>
         
         <div id="back_run_test"></div>
         <div id="back_run_test2"></div>
@@ -69,7 +69,7 @@
                             if (index==0) {
                                 $('#show_temperature').append("snow right now:  "  + snow + " inches"+ '<br/>');
                                 if (snow<2)
-                                     $('#user_notification').prepend("<p id='note'>You don't need to move your car right now </p><br/>");
+                                     $('#user_notification').prepend("<p id='note'>You don't need to move your car right now </p>");
                                 else if (snow >= 2)
                                      $('#user_notification').prepend("<p id='note'>Move your car RIGHT NOW!!! </p><br/>");
                             }
