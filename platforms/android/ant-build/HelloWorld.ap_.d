@@ -39,6 +39,7 @@ C:\Users\Sunny\Documents\GitHub\newskipper\platforms\android\assets\www\spec.htm
 C:\Users\Sunny\Documents\GitHub\newskipper\platforms\android\assets\www\css\index.css \
 C:\Users\Sunny\Documents\GitHub\newskipper\platforms\android\assets\www\img\logo.png \
 C:\Users\Sunny\Documents\GitHub\newskipper\platforms\android\assets\www\js\index.js \
+C:\Users\Sunny\Documents\GitHub\newskipper\platforms\android\assets\www\js\snow.js \
 C:\Users\Sunny\Documents\GitHub\newskipper\platforms\android\assets\www\plugins\de.appplant.cordova.plugin.local-notification \
 C:\Users\Sunny\Documents\GitHub\newskipper\platforms\android\assets\www\plugins\org.apache.cordova.device \
 C:\Users\Sunny\Documents\GitHub\newskipper\platforms\android\assets\www\plugins\de.appplant.cordova.plugin.local-notification\www \
