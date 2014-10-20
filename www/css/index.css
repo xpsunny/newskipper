@@ -1,11 +1,30 @@
 
 
 #note{    
-border:dashed 5px #000000;
--moz-border-radius: 5px;
--webkit-border-radius: 5px;
-border-radius: 5px;
-font-size: 40px;    
+	border: solid 3px #ffffff;
+	border-radius: 5px;
+	font-size: 40px;
+    background-color: white;
+    opacity: 0.7;
 }
 
+h1 {
+    color: white;
+    text-align: center;
+    font-size: 37px;
+    font-family: Georgia, serif;
+    font-weight: lighter;
+}
 
+body {
+	text-align: center;
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+    font-weight: 300;
+}
+
+h6 {
+	color: white;
+	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+    font-weight: 100;
+    opacity: 0.5;
+}

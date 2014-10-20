@@ -53,9 +53,10 @@ canvas {
 <p class="event received" onclick="window.plugin.notification.local.add({ message: 'Great app!' });"></p>
 
 <p class="event received" onclick="window.plugin.notification.local.add({ sound: 'TYPE_ALARM' });"></p>
-        
         <h1>Ticket Skipper</h1>
-        Shows notifications if you need to move your car </br>
+
+
+        </br>
         
         <div id="back_run_test"></div>
         <div id="back_run_test2"></div>
@@ -81,9 +82,9 @@ canvas {
                             if (index==0) {
                                 $('#show_temperature').append("snow right now:  "  + snow + " inches"+ '<br/>');
                                 if (snow<2)
-                                     $('#user_notification').prepend("<p id='note'>You don't need to move your car right now </p>");
+                                     $('#user_notification').prepend("<p id='note'>No need to panic. Keep your car right where it is.</p>");
                                 else if (snow >= 2)
-                                     $('#user_notification').prepend("<p id='note'>Move your car RIGHT NOW!!! </p><br/>");
+                                     $('#user_notification').prepend("<p id='note'>Move your car off the street before 8am. Don't forget your snow boots!</p>");
                             }
                             else
                                 $('#show_temperature').append("snow after " + index +" hour:  " + snow +  " inches"+ '<br/>');
@@ -150,6 +151,7 @@ canvas {
         }
 
         </script>
-       
+
+        <h6>Stealing tow truck business since 2014.</h6>
     </body>
 </html>
