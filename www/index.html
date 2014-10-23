@@ -78,46 +78,12 @@ canvas {
 
 
         <script type="text/javascript">
-        jQuery(document).ready(function($) {
-            $.ajax({
-                url : "http://api.wunderground.com/api/ed55ecb317977ec5/hourly/q/IL/Evanston.json",
-                dataType : "jsonp",
-                success : function(parsed_json) {
-                    var count = 0;
-                    $.each( parsed_json['hourly_forecast'], function( index, value ) {
-                        var snow = value['snow']['english'];
-                        if(index<8) {
-                            if (index==0) {
-                                $('#show_temperature').append("<strong>Snow right now: "  + snow + " in."+ '</strong><br/>');
-                                if (snow<2) {
-                                     $('#user_notification').prepend("<p id='note'>No need to panic. Keep your car right where it is.  <a id='data_drop' onclick='showData(); return false;'>&#187</a></p>");
-                                }
-                                else if (snow >= 2) {
-                                     $('#user_notification').prepend("<p id='note'>Move your car off the street before 8am. Don't forget your snow boots!   <a id='data_drop' onclick='showData(); return false;'>&#187</a></p>");
-                                }
-                            }
-                            else {
-                                $('#show_temperature').hide();
-                                if (index==1) {
-                                    hour = "hour";
-                                } else {
-                                    hour = "hours";
-                                }
-                                $('#show_temperature').append(index + " " + hour + " ago:  " + snow +  " in."+ '<br/>');
-                            }
-                        }                
-                    });
-                    $('#show_temperature').append("<a id='go_back' onclick='hideData(); return false;'>&#171;</a>");
-                }
-            });
-        });
-
 
         function onDeviceReady(){
             document.addEventListener('pause', onPause, false);
             document.addEventListener('resume', onResume, false);
 
-            window.plugin.notification.local.add({ sound: 'TYPE_ALARM' });
+            //window.plugin.notification.local.add({ sound: 'TYPE_ALARM' });
 
             window.plugin.backgroundMode.disable();
         }
@@ -133,38 +99,71 @@ canvas {
         $( function() {
             app.initialize();
 
+            index_message();
             back_run();
         });
+
+        function index_message() {
+            app.retrieveData( 8, function(data){
+                $.each(data, function( index, value ){
+                    var snow = value['snow_depth'];
+                    if (index==0) {
+                        $('#show_temperature').append("<strong>Snow right now: "  + snow + " in."+ '</strong><br/>');
+                        if (snow<2) {
+                            $('#user_notification').prepend("<p id='note'>No need to panic. Keep your car right where it is.  <aid='data_drop' onclick='showData(); return false;'>&#187</a></p>");
+                        }
+                        else if (snow >= 2) {
+                            $('#user_notification').prepend("<p id='note'>Move your car off the street before 8am. Don't forget your snow boots!   <a id='data_drop' onclick='showData(); return false;'>&#187</a></p>");
+                        }
+                    }
+                    else {
+                        $('#show_temperature').hide();
+                        if (index==1) {
+                            hour = "hour";
+                        } else {
+                            hour = "hours";
+                        }
+                        $('#show_temperature').append(index + " " + hour + " ago:  " + snow +  " in."+ '<br/>');
+                    }
+                });
+                $('#show_temperature').append("<a id='go_back' onclick='hideData(); return false;'>&#171;</a>");
+            });
+        }
 
         function back_run() {
             var dt = new Date();
             var myTime = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
-            var mySec = dt.getSeconds();
-            $('#back_run_test').text('in back_run:' + myTime);
-            if ( mySec == "10" ) {
-                //$('#back_run_test2').text('Is BACKRUN! @' + myTime);
-                //window.plugin.notification.local.add({ message: 'Is BACKRUN!' });
+            var myMin = dt.getHours() + ":" + dt.getMinutes();
+
+            $('#back_run_test').text('Now: ' + myMin);
+            
+            if ( myMin == "10:44" ) {
                 fetchData();
             }
-            setTimeout('back_run()',1000);
+
+            setTimeout('back_run()',60*1000);
         }
 
         function fetchData() {
             var data;
 
-            var out_head = 'Snow in 3hrs (in.): ';
             var out_strings = [];
+            var move_car = 0;
             
-            app.retrieveData( function(data){
+            app.retrieveData( 3, function(data){
                 $.each(data, function( index, value ){
-                    //$("#back_run_test2").append(value['snow_depth']);
-                    out_strings.push( ' ' + value['snow_depth'] + ' ');
-                    //console.log( index +': ' +out_strings);
+                    if( value['temp'] > 40 )
+                        move_car = 1;
+                        out_strings.push( {"hour": value['id'], "temp": value['temp']} );
                 });
-                
-                out_strings.join(' , ');
-                window.plugin.notification.local.add({ message: out_head + out_strings, sound: 'TYPE_ALARM' });
-                //$('#back_run_test3').text(out_head + out_strings);
+
+                if(move_car) {
+                    var first = out_strings.shift();
+                    window.plugin.notification.local.add({ 
+                        message: "Move your car in " + first['hour'] + " hours!!!",
+                        sound: 'TYPE_ALARM' });
+                }
+
             });
         }
 
