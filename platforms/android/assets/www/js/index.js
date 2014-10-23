@@ -74,3 +74,13 @@ var app = {
         });
     }
 };
+
+function showData() {
+    $('#user_notification').toggle();
+    $('#show_temperature').toggle();
+}
+
+function hideData() {
+    $('#show_temperature').toggle();
+    $('#user_notification').toggle();
+}

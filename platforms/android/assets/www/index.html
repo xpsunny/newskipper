@@ -27,6 +27,7 @@
         <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
         <link rel="stylesheet" type="text/css" href="css/index.css" />
+        <link href="css/bootstrap.min.css" rel="stylesheet">
         <title>Ticket Skipper</title>
         <style>/*Simple reset*/
 
@@ -53,17 +54,25 @@ canvas {
 <p class="event received" onclick="window.plugin.notification.local.add({ message: 'Great app!' });"></p>
 
 <p class="event received" onclick="window.plugin.notification.local.add({ sound: 'TYPE_ALARM' });"></p>
-        
-        <h1>Ticket Skipper</h1>
-        Shows notifications if you need to move your car </br>
+        <h1 id="app-title">Ticket Skipper</h1>
+
+
+        </br>
         
         <div id="back_run_test"></div>
         <div id="back_run_test2"></div>
         <div id="back_run_test3"></div>
-
+        
+        </br>
+        </br>
         <div id="user_notification"></div>
         <div id="show_temperature"></div>
-
+        </br>
+        </br>
+        </br>
+        </br>
+        </br>
+        </br>
 
     
 
@@ -79,16 +88,26 @@ canvas {
                         var snow = value['snow']['english'];
                         if(index<8) {
                             if (index==0) {
-                                $('#show_temperature').append("snow right now:  "  + snow + " inches"+ '<br/>');
-                                if (snow<2)
-                                     $('#user_notification').prepend("<p id='note'>You don't need to move your car right now </p>");
-                                else if (snow >= 2)
-                                     $('#user_notification').prepend("<p id='note'>Move your car RIGHT NOW!!! </p><br/>");
+                                $('#show_temperature').append("<strong>Snow right now: "  + snow + " in."+ '</strong><br/>');
+                                if (snow<2) {
+                                     $('#user_notification').prepend("<p id='note'>No need to panic. Keep your car right where it is.  <a id='data_drop' onclick='showData(); return false;'>&#187</a></p>");
+                                }
+                                else if (snow >= 2) {
+                                     $('#user_notification').prepend("<p id='note'>Move your car off the street before 8am. Don't forget your snow boots!   <a id='data_drop' onclick='showData(); return false;'>&#187</a></p>");
+                                }
                             }
-                            else
-                                $('#show_temperature').append("snow after " + index +" hour:  " + snow +  " inches"+ '<br/>');
+                            else {
+                                $('#show_temperature').hide();
+                                if (index==1) {
+                                    hour = "hour";
+                                } else {
+                                    hour = "hours";
+                                }
+                                $('#show_temperature').append(index + " " + hour + " ago:  " + snow +  " in."+ '<br/>');
+                            }
                         }                
                     });
+                    $('#show_temperature').append("<a id='go_back' onclick='hideData(); return false;'>&#171;</a>");
                 }
             });
         });
@@ -150,6 +169,7 @@ canvas {
         }
 
         </script>
-       
+
+        <h6 id="slogan">Stealing tow truck business since 2014.</h6>
     </body>
 </html>
