@@ -19,7 +19,7 @@
     specific language governing permissions and limitations
     under the License.
 -->
-<html>
+<html ng-app="myApp">
     <head>
         <meta charset="utf-8" />
         <meta name="format-detection" content="telephone=no" />
@@ -28,53 +28,84 @@
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
         <link rel="stylesheet" type="text/css" href="css/index.css" />
         <link href="css/bootstrap.min.css" rel="stylesheet">
-        <title>Ticket Skipper</title>
-        <style>/*Simple reset*/
+        <title>Parka</title>
 
-
-body {
-	/*You can use any kind of background here.*/
-	background: #6b92b9;
-}
-canvas {
-	display: inline-block;
-    position: absolute; left: 0; top: 0;
-}
-        </style>
-    </head>
-    <body>
         <script type="text/javascript" src="js/snow.js"></script>
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
+        <script type="text/javascript" src="js/storage/storage.js"></script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.1/angular.min.js"></script>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.1/angular-route.min.js"></script>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+        <script type="text/javascript" src="js/app.js"></script>
         <script type="text/javascript" charset="utf-8" src="cordova.localNotification.js"></script>
         <script type="text/javascript" charset="utf-8" src="cordova.background-mode.js"></script>
-<canvas id="canvas"> </canvas>
+        <style>/*Simple reset*/
+            body {
+                /*You can use any kind of background here.*/
+                background: #6b92b9;
+            }
+            canvas {
+                display: inline-block;
+                position: absolute; left: 0; top: 0;
+            }
+        </style>
+    </head>
+    <body ng-controller="MainCtrl">
+        <canvas id="canvas"> </canvas>
 
-<p class="event received" onclick="window.plugin.notification.local.add({ message: 'Great app!' });"></p>
+        <p class="event received" onclick="window.plugin.notification.local.add({ message: 'Great app!' });"></p>
 
-<p class="event received" onclick="window.plugin.notification.local.add({ sound: 'TYPE_ALARM' });"></p>
-        <h1 id="app-title">Ticket Skipper</h1>
+        <p class="event received" onclick="window.plugin.notification.local.add({ sound: 'TYPE_ALARM' });"></p>
 
-
-        </br>
-        
-        <div id="back_run_test"></div>
-        <div id="back_run_test2"></div>
-        <div id="back_run_test3"></div>
-        
-        </br>
-        </br>
-        <div id="user_notification"></div>
-        <div id="show_temperature"></div>
-        </br>
-        </br>
-        </br>
-        </br>
-        </br>
-        </br>
-
-    
+        <!-- PREF SELECTION -->
+            <div  class="row" ng-hide="locat">
+                <h1> Please set your location preferences: </h1>
+                <div class="col-sm-3"></div>
+                <div class="col-sm-6">
+                    <button class="btn btn-default btn-block" onclick="storage.setLocation('Evanston, IL'); location.reload()"> Evanston, IL </button> <br/>
+                    <button class="btn btn-default btn-block" onclick="storage.setLocation('Rogers Park, IL'); location.reload()"> Rogers Park, IL </button> <br/>
+                    <button class="btn btn-default btn-block" onclick="storage.setLocation('Skokie, IL'); location.reload()"> Skokie, IL </button> <br/>
+                    <button class="btn btn-default btn-block" onclick="storage.setLocation('Lincoln Park, IL'); location.reload()"> Lincoln Park, IL </button>
+                </div>
+                <div class="col-sm-3"></div>
+            </div>
+        <!-- ALARM SELECTION -->
+            <div  class="row" ng-hide="alarm">
+                <h1> Do you want automatic alarms? </h1>
+                <div class="col-sm-3"></div>
+                <div class="col-sm-6">
+                    <button class="btn btn-default" onclick="storage.setAlarm('true'); location.reload()"> YES! </button>
+                    <button class="btn btn-default" onclick="storage.setAlarm('false'); location.reload()"> Nope </button>
+                </div>
+                <div class="col-sm-3"></div>
+                 </br>
+                 </br>
+                 </br>
+                 </br>
+                 </br>
+            </div>
+        <!-- MAIN PAGE-->
+         <div ng-show="locat&&alarm">
+             <h1 id="app-title">Ticket Skipper</h1>
+             </br>
+             
+             <div id="back_run_test"></div>
+             <div id="back_run_test2"></div>
+             <div id="back_run_test3"></div>
+             
+             </br>
+             </br>
+             <div id="user_notification"></div>
+             <div id="show_temperature"></div>
+             </br>
+             </br>
+             </br>
+             </br>
+             </br>
+             </br>
+     
+        </div>
 
 
         <script type="text/javascript">
@@ -82,8 +113,6 @@ canvas {
         function onDeviceReady(){
             document.addEventListener('pause', onPause, false);
             document.addEventListener('resume', onResume, false);
-
-            //window.plugin.notification.local.add({ sound: 'TYPE_ALARM' });
 
             window.plugin.backgroundMode.disable();
         }
@@ -99,8 +128,10 @@ canvas {
         $( function() {
             app.initialize();
 
+            storage.initialize( JSON.stringify( new Array( "0", "0", "0", "0", "0", "0", "0") ));
+            refreshStorage();
             index_message();
-            back_run();
+            check_weather();
         });
 
         function index_message() {
@@ -110,7 +141,7 @@ canvas {
                     if (index==0) {
                         $('#show_temperature').append("<strong>Snow right now: "  + snow + " in."+ '</strong><br/>');
                         if (snow<2) {
-                            $('#user_notification').prepend("<p id='note'>No need to panic. Keep your car right where it is.  <aid='data_drop' onclick='showData(); return false;'>&#187</a></p>");
+                            $('#user_notification').prepend("<p id='note'>No need to panic. Keep your car right where it is.  <a id='data_drop' onclick='showData(); return false;'>&#187</a></p>");
                         }
                         else if (snow >= 2) {
                             $('#user_notification').prepend("<p id='note'>Move your car off the street before 8am. Don't forget your snow boots!   <a id='data_drop' onclick='showData(); return false;'>&#187</a></p>");
@@ -130,40 +161,84 @@ canvas {
             });
         }
 
-        function back_run() {
+        function check_weather() {
             var dt = new Date();
+            var myDate = (dt.getMonth()+1) + "-" + dt.getDate();
             var myTime = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
             var myMin = dt.getHours() + ":" + dt.getMinutes();
+            var mySec = dt.getSeconds();
 
-            $('#back_run_test').text('Now: ' + myMin);
-            
-            if ( myMin == "10:44" ) {
-                fetchData();
+            $('#back_run_test').text('Now: ' + myDate + " "  + myTime);
+
+            if ( mySec%10 == "5" ) {
+            //fake data and demo mode
+                
+                refreshStorage();
             }
 
-            setTimeout('back_run()',60*1000);
-        }
+            if (storage.getLocation() == 'Evanston, IL' || storage.getLocation() == 'Skokie, IL') {
+                // evanston & skokie @ 7:00; 2inch. overnigh
 
-        function fetchData() {
-            var data;
+                //if (myMin == "7:0") {
+                if ( mySec == "5" ) {
+                    var data = JSON.parse(storage.getSnow()), move_car = 0;
 
-            var out_strings = [];
-            var move_car = 0;
-            
-            app.retrieveData( 3, function(data){
-                $.each(data, function( index, value ){
-                    if( value['temp'] > 40 )
+                    if( data[3] > 40 ) // now, but now testing on temperature
                         move_car = 1;
-                        out_strings.push( {"hour": value['id'], "temp": value['temp']} );
-                });
 
-                if(move_car) {
-                    var first = out_strings.shift();
-                    window.plugin.notification.local.add({ 
-                        message: "Move your car in " + first['hour'] + " hours!!!",
-                        sound: 'TYPE_ALARM' });
+                    if(move_car) {
+                        if(storage.getAlarm()) {
+                            window.plugin.notification.local.add({ 
+                                message: "Snow over 2 inches! Move your car now!",
+                                sound: 'TYPE_ALARM' });
+                         } else {
+                            window.plugin.notification.local.add({ 
+                                message: "Snow over 2 inches! Move your car now!" });
+                        }
+                    }
+                }
+            } else if (storage.getLocation() == 'Rogers Park, IL' || storage.getLocation() == 'Lincoln Park, IL') {
+                // only notification(11/30) @ 5pm - parking ban starts 12/1->4/1 3am~7am
+                // lincon park & rogers park (recent 4inches), push right away(45 mins); check behind 2 hours;
+
+                var data = JSON.parse(storage.getSnow()), move_car = 0;
+
+                if ( myDate == "11-30" && myMin == "17:0") {
+                    alert("No parking 3AM-7AM, DEC 1 - APR 1");
                 }
 
+                if( data[4] > 2 ||  data[5] > 2 ) // now, but now testing on temperature
+                    move_car = 1;
+
+                if ( move_car ) {
+                    if(storage.getAlarm()) {
+                        window.plugin.notification.local.add({ 
+                            message: "Snow over 2 inches! Move your car now!",
+                            sound: 'TYPE_ALARM' });
+                     } else {
+                        window.plugin.notification.local.add({ 
+                            message: "Snow over 2 inches! Move your car now!" });
+                    }
+                }
+
+            } else {
+                $('#back_run_test3').text('smth wrong');
+            }
+
+            setTimeout('check_weather()',1000);
+        }
+
+        function refreshStorage() {
+            var data, out_strings = [];
+            var out_strings = JSON.parse( storage.getSnow() );
+            
+            app.retrieveData( 4, function(data){
+                $.each(data, function( index, value ){
+                    out_strings.push( value['temp'] );
+                    out_strings.shift();
+                });
+                
+                storage.storeSnow( JSON.stringify(out_strings) );
             });
         }
 
