@@ -33,6 +33,7 @@
         <script type="text/javascript" src="js/snow.js"></script>
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
+        <script type="text/javascript" src="js/demo.js"></script>
         <script type="text/javascript" src="js/storage/storage.js"></script>
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.1/angular.min.js"></script>
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.1/angular-route.min.js"></script>
@@ -48,7 +49,58 @@
             canvas {
                 display: inline-block;
                 position: absolute; left: 0; top: 0;
+                z-index: -1;
             }
+
+            #my_footer{
+                position: fixed;
+                width: 100%;
+                text-align: center;
+                bottom: 0;
+            }
+             /* Sticky footer styles
+      -------------------------------------------------- */
+
+      html,
+      body {
+        height: 100%;
+        margin-top: 1%;
+        margin-right: 1%;
+        margin-left: 1%;
+        margin-bottom: 1%;
+        /* The html and body elements cannot have any padding or margin. */
+      }
+
+      /* Wrapper for page content to push down footer */
+      #wrap {
+        min-height: 100%;
+        height: auto !important;
+        height: 100%;
+        /* Negative indent footer by it's height */
+        margin: 0 auto -20px;
+      }
+
+      /* Set the fixed height of the footer here */
+      #push,
+      #footer {
+        height: 20px;
+      }
+
+
+      /* Lastly, apply responsive CSS fixes as necessary */
+      @media (max-width: 767px) {
+        #footer {
+          margin-left: -20px;
+          margin-right: -20px;
+          padding-left: 20px;
+          padding-right: 20px;
+        }
+      }
+
+      #back_run_test {
+        color: white;
+      }
+
         </style>
     </head>
     <body ng-controller="MainCtrl">
@@ -60,7 +112,7 @@
 
         <!-- PREF SELECTION -->
             <div  class="row" ng-hide="locat">
-                <h1> Please set your location preferences: </h1>
+                <h2> Please set your location preferences: </h2>
                 <div class="col-sm-3"></div>
                 <div class="col-sm-6">
                     <button class="btn btn-default btn-block" onclick="storage.setLocation('Evanston, IL'); location.reload()"> Evanston, IL </button> <br/>
@@ -72,7 +124,7 @@
             </div>
         <!-- ALARM SELECTION -->
             <div  class="row" ng-hide="alarm">
-                <h1> Do you want automatic alarms? </h1>
+                <h2> Do you want automatic alarms? </h2>
                 <div class="col-sm-3"></div>
                 <div class="col-sm-6">
                     <button class="btn btn-default" onclick="storage.setAlarm('true'); location.reload()"> YES! </button>
@@ -87,10 +139,10 @@
             </div>
         <!-- MAIN PAGE-->
          <div ng-show="locat&&alarm">
-             <h1 id="app-title">Ticket Skipper</h1>
+            <h1 id="app-title"><a href="" id="logo"><img src="img/logo.png" style="max-width:60%; max-height:60%"></a></h1>
              </br>
              
-             <div id="back_run_test"></div>
+             <strong><h5 id="back_run_test"></h5></strong>
              <div id="back_run_test2"></div>
              <div id="back_run_test3"></div>
              
@@ -107,6 +159,10 @@
      
         </div>
 
+        <div id="my_footer" class="text-center">
+            <p class="muted credit"> Stealing tow truck business since 2014.</p>
+                <p ng-show="myLocation" class="muted credit"> Current Location: {{myLocation}} | <a href="" onclick="storage.removePref(); location.reload();"> <button>Reset Location</button></a></p>
+            </div>
 
         <script type="text/javascript">
 
@@ -127,11 +183,18 @@
 
         $( function() {
             app.initialize();
+            var demo_mode = 1;
 
             storage.initialize( JSON.stringify( new Array( "0", "0", "0", "0", "0", "0", "0") ));
-            refreshStorage();
-            index_message();
-            check_weather();
+            
+            if (demo_mode) {
+                var onPhone = 1;
+                demo.initialize(onPhone);
+            } else {
+                refreshStorage();
+                index_message();
+                check_weather();
+            }
         });
 
         function index_message() {
@@ -169,18 +232,13 @@
             var mySec = dt.getSeconds();
 
             $('#back_run_test').text('Now: ' + myDate + " "  + myTime);
-
-            if ( mySec%10 == "5" ) {
-            //fake data and demo mode
-                
-                refreshStorage();
-            }
+            
+            refreshStorage();
 
             if (storage.getLocation() == 'Evanston, IL' || storage.getLocation() == 'Skokie, IL') {
                 // evanston & skokie @ 7:00; 2inch. overnigh
 
-                //if (myMin == "7:0") {
-                if ( mySec == "5" ) {
+                if (myMin == "7:0") {
                     var data = JSON.parse(storage.getSnow()), move_car = 0;
 
                     if( data[3] > 40 ) // now, but now testing on temperature
@@ -210,6 +268,7 @@
                 if( data[4] > 2 ||  data[5] > 2 ) // now, but now testing on temperature
                     move_car = 1;
 
+                move_car = 0;
                 if ( move_car ) {
                     if(storage.getAlarm()) {
                         window.plugin.notification.local.add({ 
@@ -225,7 +284,7 @@
                 $('#back_run_test3').text('smth wrong');
             }
 
-            setTimeout('check_weather()',1000);
+            setTimeout('check_weather()',45*60*1000);
         }
 
         function refreshStorage() {
@@ -234,7 +293,7 @@
             
             app.retrieveData( 4, function(data){
                 $.each(data, function( index, value ){
-                    out_strings.push( value['temp'] );
+                    out_strings.push( value['snow_depth'] );
                     out_strings.shift();
                 });
                 
@@ -244,6 +303,5 @@
 
         </script>
 
-        <h6 id="slogan">Stealing tow truck business since 2014.</h6>
     </body>
 </html>

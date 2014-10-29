@@ -74,6 +74,7 @@ var app = {
             }
         });
     }
+
 };
 
 function showData() {
@@ -85,3 +86,4 @@ function hideData() {
     $('#show_temperature').toggle();
     $('#user_notification').toggle();
 }
+

@@ -29,5 +29,7 @@ myApp.controller('MainCtrl',['$scope','$location', function($scope){
   $scope.locat = localStorage.getItem("locationFlag");
   $scope.alarm = localStorage.getItem("alarmFlag");
 
+  $scope.myLocation = localStorage.getItem("location");
+
 }]);
 
